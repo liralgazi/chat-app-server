@@ -4,6 +4,9 @@ FROM node:16 AS clone-stage
 # Install Git
 RUN apt-get update && apt-get install -y git
 
+#install nodemon
+RUN npm install -g nodemon
+
 # Clone the chat-app (frontend) repository
 WORKDIR /app
 RUN git clone https://github.com/liralgazi/chat-app.git
