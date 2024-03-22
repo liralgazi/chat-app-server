@@ -20,7 +20,7 @@ RUN npm run build
 WORKDIR /app/chat-app-server
 RUN npm install
 # If you're using TypeScript, compile your project. Adjust this command according to your project's setup.
-RUN npm run build
+# RUN npm run 
 
 # Production image, copy all the files and run the server
 FROM node:16
