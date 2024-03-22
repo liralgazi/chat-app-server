@@ -5,8 +5,8 @@ dotenv.config();
 
 
 const client = new pg.Client({
-    //connectionString: process.env.PG_URL,
-    connectionString: "postgres://postgres:la1234@localhost:5432/chat-app"
+    connectionString: process.env.PG_URL,
+    //connectionString: "postgres://postgres:la1234@localhost:5432/chat-app"
   });
 
 // Wrap the connection setup in an asynchronous function
