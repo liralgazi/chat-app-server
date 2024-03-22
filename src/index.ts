@@ -5,7 +5,6 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { saveMessage, getAllMessages, getPageOfMessages } from './config/db'; 
 import dotenv from 'dotenv';
-import path from 'path';
 
 const app = express();
 dotenv.config();
@@ -24,14 +23,6 @@ const PORT = process.env.PORT || 3002;
 
 server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
-});
-
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, 'frontend', 'public')));
-
-// Anything that doesn't match the above, send back index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'public', 'index.html'));
 });
 
 
