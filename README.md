@@ -30,25 +30,30 @@ The Chat App Server provides the backend functionality for a real-time chat appl
    ```bash
    git clone https://github.com/liralgazi/chat-app-server.git
 
+   ```
+
 2. Install dependencies:
- ```bash
-  cd chat-app-server
-  npm install
+
+```bash
+ cd chat-app-server
+ npm install
 ```
 
 4. Set up environment variables:
    Create a .env file in the root directory and add the following variables:
-     PORT=3000
-     PG_URL=postgres://username:password@localhost:5432/chat-app
-   
+   PORT=3002
+   PG_URL=postgres://username:password@localhost:5432/chat-app
 5. Run the server:
-    ```bash
+   ```bash
    npm start
+   ```
 
 ## usage
+
 Once the server is running, you can connect to it using the frontend application. Make sure the frontend is configured to communicate with this server.
 
 ## Endpoints
+
 - [GET /api/messages: Fetches messages from the database. Supports pagination with query parameters limit and offset.]
 - [Dependencies]
 - [Express.js: Web framework for Node.js]
@@ -59,4 +64,5 @@ Once the server is running, you can connect to it using the frontend application
 - [cors: Middleware for handling Cross-Origin Resource Sharing (CORS)]
 
 ## License
+
 This project is licensed under the ISC License.
