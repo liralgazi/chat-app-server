@@ -1,0 +1,31 @@
+{
+  "name": "chat-app-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liralgazi/chat-app-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liralgazi/chat-app-server/issues"
+  },
+  "homepage": "https://github.com/liralgazi/chat-app-server#readme",
+  "dependencies": {
+    "@types/node": "^20.11.30",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
+    "nodemon": "^3.1.0",
+    "pg": "^8.11.3",
+    "sequelize": "^6.37.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  }
+}
