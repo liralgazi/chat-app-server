@@ -4,7 +4,6 @@ FROM node:16 AS clone-stage
 # Install Git
 RUN apt-get update && apt-get install -y git
 
-
 # Clone the chat-app (frontend) repository
 WORKDIR /app
 RUN git clone https://github.com/liralgazi/chat-app.git
@@ -20,16 +19,16 @@ RUN npm run build
 # Build the chat-app-server (backend)
 WORKDIR /app/chat-app-server
 RUN npm install
-# If you're using TypeScript, compile your project. Adjust this command according to your project's setup.
-# RUN npm run 
+# RUN npm run build  
+# Compile TypeScript to JavaScript
 
 # Production image, copy all the files and run the server
 FROM node:16
 WORKDIR /app
 COPY --from=clone-stage /app/chat-app-server .
 # Copy built static files from chat-app build to the public directory of chat-app-server
-# Adjust the paths according to where your server expects to serve static files from
 COPY --from=clone-stage /app/chat-app/dist /app/public
 
 EXPOSE 3002
-CMD ["npx", "nodemon", "--exec", "ts-node", "src/index.ts"]
+# Start the compiled JavaScript application directly with node
+CMD ["node", "dist/index.js"]
