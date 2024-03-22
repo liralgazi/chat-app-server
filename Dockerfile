@@ -14,7 +14,7 @@ RUN git clone https://github.com/liralgazi/chat-app-server.git
 # Build the chat-app (frontend)
 WORKDIR /app/chat-app
 RUN npm install
-RUN npm run build
+RUN npm run build && ls dist
 
 # Build the chat-app-server (backend)
 WORKDIR /app/chat-app-server
@@ -29,6 +29,8 @@ COPY --from=clone-stage /app/chat-app-server .
 # Copy built static files from chat-app build to the public directory of chat-app-server
 COPY --from=clone-stage /app/chat-app/dist /app/public
 
+COPY --from=clone-stage /app/chat-app/node_modules ./node_modules
+COPY --from=clone-stage /app/chat-app/package.json ./package.json
 EXPOSE 3002
 # Start the compiled JavaScript application directly with node
 CMD ["node", "dist/index.js"]
