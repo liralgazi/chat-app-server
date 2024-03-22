@@ -28,7 +28,7 @@ WORKDIR /app
 COPY --from=clone-stage /app/chat-app-server .
 # Copy built static files from chat-app build to the public directory of chat-app-server
 # Adjust the paths according to where your server expects to serve static files from
-COPY --from=clone-stage /app/chat-app/build /app/public
+COPY --from=clone-stage /app/chat-app/dist /app/public
 
 EXPOSE 3002
 CMD ["npm", "start"]
