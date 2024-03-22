@@ -5,7 +5,6 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { saveMessage, getAllMessages, getPageOfMessages } from './config/db'; 
 import dotenv from 'dotenv';
-
 const app = express();
 dotenv.config();
 const server = http.createServer(app);
@@ -39,6 +38,7 @@ io.on('connection', async (socket) => {
         console.log('A user disconnected');
     });
 });
+
 
 app.get('/api/messages', async (req, res) => { 
     let messages;
