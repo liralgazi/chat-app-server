@@ -5,7 +5,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { saveMessage, getAllMessages, getPageOfMessages } from './config/db'; 
 import dotenv from 'dotenv';
-import path from 'path'; // Import path module for handling file paths
+import path from 'path'; 
 
 const app = express();
 dotenv.config();
@@ -20,9 +20,7 @@ app.use(express.static("dist"));
 app.use('/api', routes);
 
 // Catch-all route for non-API routes
-app.all(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
-});
+
 
 const corsOptions = {
     origin: '*', 
@@ -31,13 +29,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const frontendBuildPath = path.join(__dirname, 'public');
+const frontendBuildPath = path.join(__dirname, 'dist');
 app.use(express.static(frontendBuildPath));
 
+// Catch-all route for non-API routes to serve the index.html for SPA routing
 app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+    res.sendFile(path.resolve(frontendBuildPath, 'index.html'));
 });
-
 const PORT = process.env.PORT || 3002;
 
 server.listen(PORT, () => {
