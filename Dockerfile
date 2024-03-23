@@ -1,24 +1,26 @@
-# Use Node.js 16 as the base image
-FROM node:16
+# Stage 1: Clone the frontend project
+FROM alpine/git AS frontend-clone
+WORKDIR /app/frontend
+RUN git clone https://github.com/liralgazi/chat-app.git .
 
-# Set the working directory in the container
-WORKDIR /app
+# Stage 2: Clone the backend project
+FROM alpine/git AS backend-clone
+WORKDIR /app/backend
+RUN git clone https://github.com/liralgazi/chat-app-server.git .
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-# Install dependencies
+# Stage 3: Build the backend
+FROM node:16 AS backend-build
+WORKDIR /app/backend
+COPY --from=backend-clone /app/backend /app/backend
 RUN npm install
-
-# Copy the entire backend directory to the container
-COPY . .
-
-# Build the TypeScript files
 RUN npm run build
 
-# Expose the ports for both backend and frontend servers
-EXPOSE 3002
-EXPOSE 5173
+# Stage 4: Copy built backend files and frontend files
+FROM node:16 AS final
+WORKDIR /app
+COPY --from=backend-build /app/backend/dist /app/backend
+COPY --from=frontend-clone /app/frontend /app/frontend
 
-# Command to run both backend and frontend servers
-CMD ["npm", "run", "start"]
+# Expose the necessary ports and run the backend
+EXPOSE 3002
+CMD ["node", "/app/backend/index.js"]
