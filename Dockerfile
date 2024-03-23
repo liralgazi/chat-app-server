@@ -1,38 +1,40 @@
-# Base image for Node
+# Use an official Node.js runtime as a parent image
 FROM node:16 as builder
 
-# Set working directory for the build stage
+# Set the working directory in the container
 WORKDIR /app
 
-# Assuming you've handled the frontend build process separately,
-# as the frontend and backend are in different repositories.
-
-# Copy the backend application and install its dependencies
+# Copy package.json and package-lock.json (if available) to the container
 COPY package*.json ./
+
+# Install any dependencies, including 'devDependencies' needed for building
 RUN npm install
 
-# Build the backend application
+# Copy your TypeScript source code into the Docker image
 COPY . .
+
+# Compile TypeScript to JavaScript
 RUN npm run build
 
-# Setup the final image
-FROM node:16-slim
+# Start a new stage to create a smaller image for production
+FROM node:16
 
-# Set working directory for the final image
 WORKDIR /app
 
-# Copy the built backend application from the builder stage
-COPY --from=builder /app/build ./build
-
-# Copy necessary environment configuration files
-COPY .env .
+# Copy package.json and other necessary files
+COPY package*.json ./
 
 # Install only production dependencies
-COPY package*.json ./
 RUN npm install --only=production
 
-# Expose the backend port
+# Copy the compiled JavaScript from the previous stage
+COPY --from=builder /app/build ./build
+
+# Copy frontend build artifacts into the public directory
+COPY --from=builder /app/frontend-build ./public
+
+# Expose your application's default port
 EXPOSE 3002
 
-# Command to run the backend
-CMD ["node", "build/index.js"]
+# Use the 'start:prod' script to run your compiled application
+CMD ["npm", "run", "start:prod"]
