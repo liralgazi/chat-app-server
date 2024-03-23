@@ -29,11 +29,11 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # Copy the compiled JavaScript from the builder stage
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/build ./dist
 
 # Copy frontend build artifacts into the public directory of the Docker container
 # Adjust this line if your frontend artifacts are located in a different directory
-COPY --from=builder /app/frontend-build ./public
+COPY --from=builder /app/dist ./public
 
 # Expose the port the backend server listens on
 EXPOSE 3002

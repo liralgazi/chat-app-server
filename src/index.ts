@@ -17,20 +17,12 @@ app.use(express.json());
 // Serve static files from "build/public/build" for non-API routes
 app.use(express.static("dist"));
 
-// ******************* //
-// API routes from here
-
 app.use('/api', routes);
-
-// ******************* //
 
 // Catch-all route for non-API routes
 app.all(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });
-
-
-
 
 const corsOptions = {
     origin: '*', 
