@@ -1,43 +1,42 @@
-# Use an official Node.js runtime as a parent image
+# Stage 1: Build the backend application from TypeScript to JavaScript
 FROM node:16 as builder
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available) to the container
+# Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
-# Install any dependencies, including 'devDependencies' needed for building
+# Install dependencies, including 'devDependencies' for building
 RUN npm install
 
-# Copy your TypeScript source code and other necessary files into the Docker image
+# Copy the backend TypeScript source code into the Docker image
 COPY . .
 
-# Compile TypeScript to JavaScript
+# Run the TypeScript compiler to build the JavaScript files
 RUN npm run build
 
-# Assuming you have a step to build your frontend and place it in `frontend-build`
-# If your frontend build step is outside of this Dockerfile, ensure that it's run beforehand and the assets are available
-
-# Start a new stage to create a smaller image for production
+# Start a new, final stage to create a smaller production image
 FROM node:16
 
+# Set the working directory for the production image
 WORKDIR /app
 
-# Copy package.json and other necessary files for production
+# Copy package.json and other necessary files
 COPY package*.json ./
 
-# Install only production dependencies
+# Install only production dependencies in the final image
 RUN npm install --only=production
 
-# Copy the compiled JavaScript from the previous stage
+# Copy the compiled JavaScript from the builder stage
 COPY --from=builder /app/build ./build
 
-# Copy frontend build artifacts, including pages, into the public directory
+# Copy frontend build artifacts into the public directory of the Docker container
+# Adjust this line if your frontend artifacts are located in a different directory
 COPY --from=builder /app/frontend-build ./public
 
-# Expose your application's default port
+# Expose the port the backend server listens on
 EXPOSE 3002
 
-# Use the 'start:prod' script to run your compiled application
+# Command to run the backend server
 CMD ["npm", "run", "start:prod"]

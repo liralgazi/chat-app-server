@@ -13,7 +13,24 @@ const server = http.createServer(app);
 const io = new Server(server, {});
 
 app.use(express.json());
+
+// Serve static files from "build/public/build" for non-API routes
+app.use(express.static("dist"));
+
+// ******************* //
+// API routes from here
+
 app.use('/api', routes);
+
+// ******************* //
+
+// Catch-all route for non-API routes
+app.all(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
+});
+
+
+
 
 const corsOptions = {
     origin: '*', 
@@ -22,12 +39,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Adjusted: Serve the React frontend as static files from the 'public' directory
 const frontendBuildPath = path.join(__dirname, 'public');
 app.use(express.static(frontendBuildPath));
 
-// Adjusted: Serve the React app for any routes not prefixed with /api
-// This ensures that client-side routing in the SPA works correctly
 app.get('*', (req, res) => {
     res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
