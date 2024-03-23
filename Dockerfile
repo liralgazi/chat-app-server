@@ -16,8 +16,9 @@ COPY . .
 # Build the TypeScript files
 RUN npm run build
 
-# Expose the port that the Express server will run on
+# Expose the ports for both backend and frontend servers
 EXPOSE 3002
+EXPOSE 5173
 
-# Command to run the compiled JavaScript file
-CMD ["node", "build/index.js"]
+# Command to run both backend and frontend servers
+CMD ["npm", "run", "start"]
