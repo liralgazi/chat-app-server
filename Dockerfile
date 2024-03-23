@@ -1,43 +1,23 @@
-# Stage 1: Clone and build the frontend
-FROM node:16 AS frontend-build
-WORKDIR /app/frontend
+# Use Node.js 16 as the base image
+FROM node:16
 
-# Clone your frontend repository
-RUN git clone https://github.com/liralgazi/chat-app.git .
+# Set the working directory in the container
+WORKDIR /app
 
-# Install dependencies and build the project
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
+
+# Copy the entire backend directory to the container
+COPY . .
+
+# Build the TypeScript files
 RUN npm run build
 
-# Stage 2: Clone and setup the backend
-FROM node:16 AS backend-setup
-WORKDIR /app/backend
-
-# Clone your backend repository
-RUN git clone https://github.com/liralgazi/chat-app-server.git .
-
-# Ensure NODE_ENV is not set to production to include devDependencies
-ENV NODE_ENV=development
-
-# Copy the tsconfig.json file to the Docker container
-COPY tsconfig.json /app/backend/tsconfig.json
-
-# Install backend dependencies, including devDependencies
-RUN npm install
-
-# Set executable permissions for all scripts in node_modules/.bin
-RUN chmod +x -R node_modules/.bin
-
-# Build the backend TypeScript files to JavaScript
-RUN ./node_modules/.bin/tsc
-
-# Copy built frontend files from the frontend-build stage to the backend's public directory
-COPY --from=frontend-build /app/frontend/dist /app/backend/public
-
-# Expose the backend port
+# Expose the port that the Express server will run on
 EXPOSE 3002
 
-# Use the production start script
-CMD ["npm", "run", "start:prod"]
-
-
+# Command to run the compiled JavaScript file
+CMD ["node", "build/index.js"]
