@@ -1,42 +1,23 @@
-# Stage 1: Build the backend application from TypeScript to JavaScript
-FROM node:16 as builder
+# Use Node.js as base image
+FROM node:14-alpine
 
-# Set the working directory
+# Set working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies, including 'devDependencies' for building
-RUN npm install
+# Install dependencies
+RUN npm install --production
 
-# Copy the backend TypeScript source code into the Docker image
+# Copy all source code
 COPY . .
 
-# Run the TypeScript compiler to build the JavaScript files
+# Build TypeScript code
 RUN npm run build
 
-# Start a new, final stage to create a smaller production image
-FROM node:16
-
-# Set the working directory for the production image
-WORKDIR /app
-
-# Copy package.json and other necessary files
-COPY package*.json ./
-
-# Install only production dependencies in the final image
-RUN npm install --only=production
-
-# Copy the compiled JavaScript from the builder stage
-COPY --from=builder /app/build ./dist
-
-# Copy frontend build artifacts into the public directory of the Docker container
-# Adjust this line if your frontend artifacts are located in a different directory
-COPY --from=builder /app/dist ./public
-
-# Expose the port the backend server listens on
+# Expose the port on which the server will run
 EXPOSE 3002
 
-# Command to run the backend server
-CMD ["npm", "run", "start:prod"]
+# Command to run the server
+CMD ["npm", "start"]
