@@ -1,36 +1,29 @@
-# Use an official Node runtime as a parent image for cloning and building
-FROM node:16 AS clone-stage
-
-# Install Git
-RUN apt-get update && apt-get install -y git
-
-# Clone the chat-app (frontend) repository
+# Stage 1: Build the frontend
+FROM node:16 as frontend-build
 WORKDIR /app
-RUN git clone https://github.com/liralgazi/chat-app.git
 
-# Clone the chat-app-server (backend) repository
-RUN git clone https://github.com/liralgazi/chat-app-server.git
+# Your frontend Dockerfile here
 
-# Build the chat-app (frontend)
-WORKDIR /app/chat-app
+# Stage 2: Prepare the backend
+FROM node:16 as backend-setup
+WORKDIR /backend
+
+# Clone the backend repository and install dependencies
+RUN git clone https://github.com/liralgazi/chat-app-server.git .
 RUN npm install
-RUN npm run build && ls dist
 
-# Build the chat-app-server (backend)
-WORKDIR /app/chat-app-server
-RUN npm install
-# RUN npm run build  
-# Compile TypeScript to JavaScript
-
-# Production image, copy all the files and run the server
+# Stage 3: Setup the production environment
 FROM node:16
 WORKDIR /app
-COPY --from=clone-stage /app/chat-app-server .
-# Copy built static files from chat-app build to the public directory of chat-app-server
-COPY --from=clone-stage /app/chat-app/dist /app/public
 
-COPY --from=clone-stage /app/chat-app/node_modules ./node_modules
-COPY --from=clone-stage /app/chat-app/package.json ./package.json
+# Copy the backend setup (including node_modules)
+COPY --from=backend-setup /backend ./backend
+
+# Copy the frontend build output
+COPY --from=frontend-build /app/build ./public
+
+# Expose the backend port
 EXPOSE 3002
-# Start the compiled JavaScript application directly with node
-CMD ["node", "dist/index.js"]
+
+# Start the backend server
+CMD ["npm", "start"]
