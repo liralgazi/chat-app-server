@@ -1,26 +1,38 @@
-# Stage 1: Clone the frontend project
-FROM alpine/git AS frontend-clone
-WORKDIR /app/frontend
-RUN git clone https://github.com/liralgazi/chat-app.git .
+# Base image for Node
+FROM node:16 as builder
 
-# Stage 2: Clone the backend project
-FROM alpine/git AS backend-clone
-WORKDIR /app/backend
-RUN git clone https://github.com/liralgazi/chat-app-server.git .
+# Set working directory for the build stage
+WORKDIR /app
 
-# Stage 3: Build the backend
-FROM node:16 AS backend-build
-WORKDIR /app/backend
-COPY --from=backend-clone /app/backend /app/backend
+# Assuming you've handled the frontend build process separately,
+# as the frontend and backend are in different repositories.
+
+# Copy the backend application and install its dependencies
+COPY package*.json ./
 RUN npm install
+
+# Build the backend application
+COPY . .
 RUN npm run build
 
-# Stage 4: Copy built backend files and frontend files
-FROM node:16 AS final
-WORKDIR /app
-COPY --from=backend-build /app/backend/dist /app/backend
-COPY --from=frontend-clone /app/frontend /app/frontend
+# Setup the final image
+FROM node:16-slim
 
-# Expose the necessary ports and run the backend
+# Set working directory for the final image
+WORKDIR /app
+
+# Copy the built backend application from the builder stage
+COPY --from=builder /app/build ./build
+
+# Copy necessary environment configuration files
+COPY .env .
+
+# Install only production dependencies
+COPY package*.json ./
+RUN npm install --only=production
+
+# Expose the backend port
 EXPOSE 3002
-CMD ["node", "/app/backend/index.js"]
+
+# Command to run the backend
+CMD ["node", "build/index.js"]
