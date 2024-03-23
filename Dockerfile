@@ -1,5 +1,5 @@
 # Use Node.js as base image
-FROM node:14-alpine
+FROM node:14-alpine as builder
 
 # Set working directory in the container
 WORKDIR /app
