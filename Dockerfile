@@ -19,17 +19,17 @@ RUN git clone https://github.com/liralgazi/chat-app-server.git .
 # Ensure NODE_ENV is not set to production to include devDependencies
 ENV NODE_ENV=development
 
+# Copy the tsconfig.json file to the Docker container
+COPY tsconfig.json /app/backend/tsconfig.json
+
 # Install backend dependencies, including devDependencies
 RUN npm install
 
-# Set executable permissions for all scripts in node_modules/.bin (might not be necessary, but keeping it for debugging purposes)
+# Set executable permissions for all scripts in node_modules/.bin
 RUN chmod +x -R node_modules/.bin
 
-# Check TypeScript version to ensure 'tsc' is available and executable
-RUN npx tsc --version
-
 # Build the backend TypeScript files to JavaScript
-RUN npm run build
+RUN ./node_modules/.bin/tsc
 
 # Copy built frontend files from the frontend-build stage to the backend's public directory
 COPY --from=frontend-build /app/frontend/dist /app/backend/public

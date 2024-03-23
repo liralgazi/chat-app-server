@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2019", /* More modern target if your environment supports it */
+    "module": "commonjs",
+    "outDir": "./build",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true, /* If you need to import JSON files */
+    "rootDir": "./src", /* Assuming your source files are in a 'src' directory */
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build", "**/*.spec.ts"]
+}
