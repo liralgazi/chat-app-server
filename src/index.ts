@@ -14,9 +14,11 @@ const io = new Server(server, {});
 
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, '..', 'dist')));
+/*
 // Serve static files from "dist" directory for non-API routes
 app.use(express.static("dist"));
-
+*/
 app.use('/api', routes);
 
 // Configure CORS
@@ -31,10 +33,10 @@ const frontendBuildPath = path.join(__dirname, 'dist');
 app.use(express.static(frontendBuildPath));
 
 // Catch-all route for non-API routes to serve the index.html for SPA (Single Page Application) routing
+// After
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(frontendBuildPath, 'index.html'));
-});
-
+    res.sendFile(path.resolve(__dirname, '..', 'dist', 'index.html'));
+  });
 // Define the port to run the server on
 const PORT = process.env.PORT || 3002;
 
