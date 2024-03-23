@@ -22,11 +22,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Serve the React frontend as static files
-const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
+// Adjusted: Serve the React frontend as static files from the 'public' directory
+const frontendBuildPath = path.join(__dirname, 'public');
 app.use(express.static(frontendBuildPath));
 
-// Serve the React app for any routes not prefixed with /api
+// Adjusted: Serve the React app for any routes not prefixed with /api
+// This ensures that client-side routing in the SPA works correctly
 app.get('*', (req, res) => {
     res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
