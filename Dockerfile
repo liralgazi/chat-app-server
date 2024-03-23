@@ -39,3 +39,5 @@ EXPOSE 3002
 
 # Use the production start script
 CMD ["npm", "run", "start:prod"]
+
+
