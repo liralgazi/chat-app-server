@@ -1,29 +1,32 @@
 # Stage 1: Build the frontend
 FROM node:16 as frontend-build
+
+# Set working directory for the frontend build
+WORKDIR /app/frontend
+
+# Clone the frontend repository
+RUN git clone https://github.com/liralgazi/chat-app.git .
+
+# Install frontend dependencies and build static files
+RUN npm install && npm run build
+
+# Stage 2: Build the backend and include frontend static files
+FROM node:16
+
+# Set working directory for the backend
 WORKDIR /app
 
-# Your frontend Dockerfile here
-
-# Stage 2: Prepare the backend
-FROM node:16 as backend-setup
-WORKDIR /backend
-
-# Clone the backend repository and install dependencies
+# Clone the backend repository
 RUN git clone https://github.com/liralgazi/chat-app-server.git .
+
+# Install backend dependencies
 RUN npm install
 
-# Stage 3: Setup the production environment
-FROM node:16
-WORKDIR /app
-
-# Copy the backend setup (including node_modules)
-COPY --from=backend-setup /backend ./backend
-
-# Copy the frontend build output
-COPY --from=frontend-build /app/build ./public
+# Copy built static files from the frontend-build stage to the backend public directory
+COPY --from=frontend-build /app/frontend/dist /app/public
 
 # Expose the backend port
 EXPOSE 3002
 
-# Start the backend server
+# Start the backend server, adjust the command based on your server start command
 CMD ["npm", "start"]
