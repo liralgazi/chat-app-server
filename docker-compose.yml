@@ -1,43 +1,25 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  chat-app:
+    image: chat-app-image
     ports:
       - "3002:3002"
     environment:
       PG_URL: postgres://postgres:la1234@db:5432/chat-app
     depends_on:
-      db:
-        condition: service_healthy
-
-  frontend:
-    build:
-      context: ../chat-app
-    command: npm run dev
-    ports:
-      - "5713:5713"
-    volumes:
-      - ../chat-app:/app
-      - /app/node_modules
-    depends_on:
-      - app
+      - db
 
   db:
     image: postgres:13
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: la1234
       POSTGRES_DB: chat-app
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  postgres-data:

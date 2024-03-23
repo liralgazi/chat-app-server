@@ -16,6 +16,9 @@ COPY . .
 # Build TypeScript code
 RUN npm run build
 
+# Set execute permission for nodemon
+RUN npm install -g nodemon && chmod +x /usr/local/bin/nodemon
+
 # Expose the port on which the server will run
 EXPOSE 3002
 
