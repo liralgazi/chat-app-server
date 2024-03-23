@@ -9,7 +9,7 @@ services:
     ports:
       - "3002:3002"
     environment:
-      - PG_URL=postgres://postgres:la1234@chat-app:5432/chat-app
+      - PG_URL=postgres://postgres:la1234@db:5432/chat-app
       - PORT=3002
     volumes:
       - .:/app

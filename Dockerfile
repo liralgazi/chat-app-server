@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies and set execute permission for nodemon
-RUN npm install --production && npm install -g nodemon && chmod +x /usr/local/bin/nodonemon
+RUN npm install --production && npm install -g nodemon && chmod +x /usr/local/bin/nodemon
 
 # Copy all source code
 COPY . .
