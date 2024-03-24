@@ -1,5 +1,5 @@
 # Use Node.js as base image
-FROM node:14 as builder
+FROM node:14 AS builder
 
 # Set working directory in the container
 WORKDIR /app

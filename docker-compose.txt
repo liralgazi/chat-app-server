@@ -1,3 +1,4 @@
+# relates on image:
 version: '3'
 
 services:
@@ -8,14 +9,11 @@ services:
       POSTGRES_PASSWORD: la1234
       POSTGRES_DB: chat-app
     ports:
-      - "5432:5432"
-    volumes:
       - db-data:/var/lib/postgresql/data
 
   chat-app:
     build:
-      context: .
-      dockerfile: Dockerfile
+        image: chat-app-image
     depends_on:
       - db
     environment:
