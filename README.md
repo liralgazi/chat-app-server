@@ -34,10 +34,10 @@ The Chat App Server provides the backend functionality for a real-time chat appl
 
 2. Install dependencies:
 
-```bash
- cd chat-app-server
- npm install
-```
+   ```bash
+   cd chat-app-server
+   npm install
+   ```
 
 4. Set up environment variables:
    Create a .env file in the root directory and add the following variables:
