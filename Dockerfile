@@ -1,5 +1,5 @@
 # Use Node.js as base image
-FROM node:14-alpine as builder
+FROM node:14 as builder
 
 # Set working directory in the container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies and set execute permission for nodemon
-RUN npm install --production && npm install -g nodemon && chmod +x /usr/local/bin/nodemon
+RUN npm install
 
 # Copy all source code
 COPY . .
@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3002
 
 # Command to run the server
-CMD ["npm", "start"]
+CMD ["npm", "start","start:backend"]
